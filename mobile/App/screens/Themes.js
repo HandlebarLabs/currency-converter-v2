@@ -1,12 +1,14 @@
 import React from "react";
 import { ScrollView, Button } from "react-native";
+import { connect } from "react-redux";
 
 import colors from "../config/colors";
+import { changePrimaryColor } from "../redux/theme";
 
 class Themes extends React.Component {
   handlePress = color => {
-    console.log("color", color);
     this.props.navigation.goBack();
+    this.props.dispatch(changePrimaryColor(color));
   };
 
   render() {
@@ -37,4 +39,4 @@ class Themes extends React.Component {
   }
 }
 
-export default Themes;
+export default connect()(Themes);

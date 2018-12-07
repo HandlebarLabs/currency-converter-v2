@@ -1,11 +1,20 @@
 import React from "react";
 import { FlatList, Button } from "react-native";
+import { connect } from "react-redux";
 
 import currencies from "../data/currencies";
+import { changeBaseCurrency, changeQuoteCurrency } from "../redux/currencies";
 
 class CurrencyList extends React.Component {
   handlePress = currency => {
-    console.log("currency", currency);
+    const { navigation, dispatch } = this.props;
+
+    if (navigation.getParam("type", "").toLowerCase() === "quote") {
+      dispatch(changeQuoteCurrency(currency));
+    } else {
+      dispatch(changeBaseCurrency(currency));
+    }
+
     this.props.navigation.goBack(null);
   };
 
@@ -23,4 +32,4 @@ class CurrencyList extends React.Component {
   }
 }
 
-export default CurrencyList;
+export default connect()(CurrencyList);

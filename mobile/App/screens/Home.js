@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Button, TextInput, Text } from "react-native";
+import { connect } from "react-redux";
+
+import { swapCurrency } from "../redux/currencies";
 
 class Home extends React.Component {
   static defaultProps = {
-    baseCurrency: "USD",
-    quoteCurrency: "AUD",
     conversionRate: 1.3
   };
 
@@ -23,7 +24,7 @@ class Home extends React.Component {
   };
 
   handleSwapCurrency = () => {
-    console.log("swap currencies");
+    this.props.dispatch(swapCurrency());
   };
 
   handleChangeText = value => {
@@ -38,11 +39,19 @@ class Home extends React.Component {
 
   render() {
     const { amount } = this.state;
-    const { baseCurrency, quoteCurrency, conversionRate } = this.props;
+    const {
+      baseCurrency,
+      quoteCurrency,
+      conversionRate,
+      primaryColor
+    } = this.props;
 
     return (
       <View>
         <View style={{ alignSelf: "center" }}>
+          <View
+            style={{ width: 30, height: 30, backgroundColor: primaryColor }}
+          />
           <Text>{baseCurrency}</Text>
           <TextInput
             onChangeText={this.handleChangeText}
@@ -78,4 +87,12 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+const mapStateToProps = state => {
+  return {
+    primaryColor: state.theme.primaryColor,
+    baseCurrency: state.currencies.baseCurrency,
+    quoteCurrency: state.currencies.quoteCurrency
+  };
+};
+
+export default connect(mapStateToProps)(Home);
