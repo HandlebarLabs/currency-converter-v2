@@ -7,19 +7,58 @@ export const GET_INITIAL_CONVERSION = "GET_INITIAL_CONVERSION";
 export const CONVERSION_RESULT = "CONVERSION_RESULT";
 export const CONVERSION_ERROR = "CONVERSION_ERROR";
 
+// Helpers
+const getLatestRates = (currency, dispatch) => {
+  return fetch(`http://localhost:3000/latest?base=${currency}`)
+    .then(response => response.json())
+    .then(response => {
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      dispatch({
+        type: CONVERSION_RESULT,
+        result: response
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: CONVERSION_ERROR,
+        error: error.message
+      });
+    });
+};
+
 // Actions
-export const getInitialConversion = () => ({
-  type: GET_INITIAL_CONVERSION
-});
+export const getInitialConversion = () => {
+  return (dispatch, getState) => {
+    dispatch({ type: GET_INITIAL_CONVERSION });
 
-export const swapCurrency = () => ({
-  type: SWAP_CURRENCY
-});
+    const base = getState().currencies.baseCurrency;
+    return getLatestRates(base, dispatch);
+  };
+};
 
-export const changeBaseCurrency = currency => ({
-  type: CHANGE_BASE_CURRENCY,
-  currency
-});
+export const swapCurrency = () => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SWAP_CURRENCY
+    });
+
+    const base = getState().currencies.baseCurrency;
+    return getLatestRates(base, dispatch);
+  };
+};
+
+export const changeBaseCurrency = currency => {
+  return dispatch => {
+    dispatch({
+      type: CHANGE_BASE_CURRENCY,
+      currency
+    });
+    return getLatestRates(currency, dispatch);
+  };
+};
 
 export const changeQuoteCurrency = currency => ({
   type: CHANGE_QUOTE_CURRENCY,

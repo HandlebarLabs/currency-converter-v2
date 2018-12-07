@@ -2,14 +2,14 @@ import React from "react";
 import { View, Button, TextInput, Text } from "react-native";
 import { connect } from "react-redux";
 
-import { swapCurrency } from "../redux/currencies";
+import { swapCurrency, getInitialConversion } from "../redux/currencies";
 
 class Home extends React.Component {
-  static defaultProps = {
-    conversionRate: 1.3
-  };
-
   state = { amount: 100 };
+
+  componentDidMount() {
+    this.props.dispatch(getInitialConversion());
+  }
 
   handlePressBase = () => {
     this.props.navigation.navigate("CurrencyList", { type: "Base" });
@@ -88,10 +88,21 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const baseCurrency = state.currencies.baseCurrency;
+  const quoteCurrency = state.currencies.quoteCurrency;
+
+  const conversionSelector = state.currencies.conversions[baseCurrency] || {};
+  const rates = conversionSelector.rates || {};
+
   return {
     primaryColor: state.theme.primaryColor,
-    baseCurrency: state.currencies.baseCurrency,
-    quoteCurrency: state.currencies.quoteCurrency
+    baseCurrency,
+    quoteCurrency,
+    conversionRate: rates[quoteCurrency] || 0,
+    isFetching: conversionSelector.isFetching, // TODO:
+    lastConvertedDate: conversionSelector.date
+      ? new Date(conversionSelector.date)
+      : new Date() // TODO:
   };
 };
 

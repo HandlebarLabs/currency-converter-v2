@@ -19,7 +19,7 @@ app.get("/latest", (req, res) => {
   const rates = data.rates[base] || {};
   const hasRates = Object.keys(rates).length > 0;
 
-  res.status(200).json({
+  res.status(hasRates ? 200 : 404).json({
     message: WARNING,
     base,
     rates,
