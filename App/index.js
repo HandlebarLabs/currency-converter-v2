@@ -1,8 +1,5 @@
 import React from "react";
 import { View, Text } from "react-native";
+import Navigator from "./navigation/navigator";
 
-export default () => (
-  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text>Hello, world.</Text>
-  </View>
-);
+export default () => <Navigator />;
