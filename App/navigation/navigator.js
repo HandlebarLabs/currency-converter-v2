@@ -31,8 +31,7 @@ const CurrencyListStack = createStackNavigator({
   CurrencyList: {
     screen: CurrencyList,
     navigationOptions: ({ navigation }) => ({
-      headerTitle: "Currency List"
-      //   headerTitle: navigation.state.params.title,
+      headerTitle: `${navigation.state.params.type} Currency`
     })
   }
 });

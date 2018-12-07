@@ -1,8 +1,25 @@
 import React from "react";
-import { View, Button } from "react-native";
+import { View, Button, Linking } from "react-native";
 
-export default ({ navigation }) => (
-  <View>
-    <Button title="Themes" onPress={() => navigation.navigate("Themes")} />
-  </View>
-);
+class Options extends React.Component {
+  handleThemePress = () => {
+    this.props.navigation.navigate("Themes");
+  };
+
+  handleLinkPress = () => {
+    Linking.openURL("http://handlebarlabs.com").catch(() => {
+      alert("an error occurred!");
+    });
+  };
+
+  render() {
+    return (
+      <View>
+        <Button title="Themes" onPress={this.handleThemePress} />
+        <Button title="Handlebar Labs" onPress={this.handleLinkPress} />
+      </View>
+    );
+  }
+}
+
+export default Options;
